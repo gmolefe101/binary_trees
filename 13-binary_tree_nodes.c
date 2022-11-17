@@ -1,12 +1,19 @@
 #include "binary_trees.h"
-
+/**
+ * binary_tree_nodes - count nodes in tree
+ * @tree: node to start at
+ * Return: amount of nodes
+ */
 size_t binary_tree_nodes(const binary_tree_t *tree)
 {
-	if (!tree)
-		return (0);
+	size_t lnode, rnode, nodes = 0;
 
+	if (tree == NULL)
+		return (0);
 	if (tree->left || tree->right)
-		return (1 + binary_tree_nodes(tree->left) +
-				binary_tree_nodes(tree->right));
-	return (0);
+		nodes++;
+	lnode = binary_tree_nodes(tree->left);
+	rnode = binary_tree_nodes(tree->right);
+	nodes += (lnode + rnode);
+	return (nodes);
 }

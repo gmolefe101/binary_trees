@@ -1,39 +1,46 @@
 #include "binary_trees.h"
-
-size_t _binary_tree_height(const binary_tree_t *tree)
+#include "14-binary_tree_balance.c"
+#include "15-binary_tree_is_full.c"
+/**
+ * check_leaves - checks if all leaves are at same level
+ * @tree: node to start
+ * @current: current level of current leaf
+ * @level: level of past leaves
+ * Return: true or false
+ */
+int check_leaves(const binary_tree_t *tree, int current, int *level)
 {
-	size_t a, b;
 
-	if (!tree)
+	if (tree == NULL)
 		return (0);
-
-	a = _binary_tree_height(tree->left);
-	b = _binary_tree_height(tree->right);
-	return (MAX(a, b) + 1);
+	if (tree->right == NULL && tree->left == NULL)
+	{
+		if (*level == 0)
+		{
+			*level = current;
+			return (1);
+		}
+		return (*level == current);
+	}
+	return (check_leaves(tree->left, current + 1, level) &&
+		check_leaves(tree->right, current + 1, level));
 }
-
-size_t binary_tree_height(const binary_tree_t *tree)
-{
-	if (!tree)
-		return (0);
-	return (_binary_tree_height(tree) - 1);
-}
-
-size_t binary_tree_size(const binary_tree_t *tree)
-{
-	if (!tree)
-		return (0);
-
-	return (1 + binary_tree_size(tree->left) + binary_tree_size(tree->right));
-}
-
+/**
+ * binary_tree_is_perfect - finds if tree is full or not
+ * @tree: root node
+ * Return: balance
+ */
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
-	int n, h;
+	int level = 0;
 
-	if (!tree)
+	if (tree == NULL)
 		return (0);
-	n = (int)binary_tree_size(tree);
-	h = binary_tree_height(tree);
-	return (n == (2 << h) - 1);
+
+	if (binary_tree_is_full(tree) && (!binary_tree_balance(tree)))
+	{
+		return (check_leaves(tree, 0, &level));
+	}
+
+	return (0);
 }
